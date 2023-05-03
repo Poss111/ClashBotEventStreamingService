@@ -1,0 +1,3 @@
+service:
+  springProfile: local
+  port: 8080
