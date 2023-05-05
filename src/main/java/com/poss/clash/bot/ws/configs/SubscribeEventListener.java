@@ -9,14 +9,14 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
 @Component
 @Slf4j
-public class ClashBotEventListener implements ApplicationListener<SessionSubscribeEvent> {
+public class SubscribeEventListener implements ApplicationListener<SessionSubscribeEvent> {
 
     @Override
     public void onApplicationEvent(SessionSubscribeEvent event) {
-        var message = (GenericMessage) event.getMessage();
+        GenericMessage message = (GenericMessage) event.getMessage();
         MessageHeaders headers = message.getHeaders();
 
-        log.info("Subscribed {}", headers);
+        log.trace("Subscribed {}", headers);
     }
 
 }

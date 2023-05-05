@@ -25,6 +25,7 @@ public class WsController {
             consumes = { "application/json" }
     )
     public Mono<ResponseEntity<Event>> quickCall(@RequestBody Event clashEventMono) {
+        log.info("Received event {}...", clashEventMono.getServerId());
         return Mono.just(clashEventMono)
                 .flatMap(event -> Mono.fromCallable(() -> {
                     simpMessagingTemplate.convertAndSend(MessageFormat.format("/topic/server/{0}", event.getServerId()), event);

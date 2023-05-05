@@ -1,5 +1,5 @@
 apiVersion: v2
-name: clash-bot-event-stream
+name: clash-bot-event-streaming-service
 description: A helm chart for the event stream to support Clash Bot
 type: application
 version: 0.1.0

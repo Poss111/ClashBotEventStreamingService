@@ -1,3 +1,7 @@
 service:
-  springProfile: local
-  port: 8080
+  eventConsumer:
+    port: 8080
+    springProfile: k8s
+  eventStreamingService:
+    port: 8081
+    springProfile: k8s
