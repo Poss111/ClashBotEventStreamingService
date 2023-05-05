@@ -41,8 +41,6 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  eventConsumerPort: 80
-  eventStreamingServicePort: 81
 
 aws:
   region: us-east-1

@@ -35,11 +35,11 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.service.springProfile }}
+              value: {{ .Values.service.eventConsumer.springProfile }}
             - name: SERVER_PORT
-              value: "{{ .Values.service.eventConsumerPort }}"
+              value: "{{ .Values.service.eventConsumer.port }}"
             - name: CLASH_BOT_STREAM_URL
-              value: "http://localhost:{{ .Values.service.eventStreamingServicePort }}"
+              value: "http://localhost:{{ .Values.service.eventStreamingService.port }}"
             - name: AWS_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
@@ -73,12 +73,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: {{ .Values.service.springProfile }}
+              value: {{ .Values.service.eventStreamingService.springProfile }}
             - name: SERVER_PORT
-              value: "{{ .Values.service.eventStreamingServicePort }}"
+              value: "{{ .Values.service.eventStreamingService.port }}"
           ports:
             - name: http
-              containerPort: {{ .Values.service.eventStreamingServicePort }}
+              containerPort: {{ .Values.service.eventStreamingService.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
