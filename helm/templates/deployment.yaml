@@ -28,19 +28,57 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: clash-bot-event-consumer
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.baseRepository }}/{{ .Values.image.eventConsumerRepository }}:{{ .Values.image.eventConsumerTag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.service.springProfile }}
             - name: SERVER_PORT
-              value: "{{ .Values.service.port }}"
+              value: "{{ .Values.service.eventConsumerPort }}"
+            - name: CLASH_BOT_STREAM_URL
+              value: "http://localhost:{{ .Values.service.eventStreamingServicePort }}"
+            - name: AWS_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: access-key
+            - name: AWS_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-creds
+                  key: secret-key
+            - name: AWS_REGION
+              value: {{ .Values.aws.region }}
           ports:
             - name: http
-              containerPort: {{ .Values.service.port }}
+              containerPort: {{ .Values.service.eventConsumerPort }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.baseRepository }}/{{ .Values.image.eventStreamingServiceRepository }}:{{ .Values.image.eventStreamingServiceTag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.service.springProfile }}
+            - name: SERVER_PORT
+              value: "{{ .Values.service.eventStreamingServicePort }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.eventStreamingServicePort }}
               protocol: TCP
           livenessProbe:
             httpGet:

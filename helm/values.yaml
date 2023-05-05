@@ -5,10 +5,13 @@
 replicaCount: 1
 
 image:
-  repository: poss11111/clash-bot-event-stream
+  eventStreamingServiceRepository: clash-bot-event-stream
+  baseRepository: poss11111
+  eventConsumerRepository: clash-bot-event-consumer
   pullPolicy: Never
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  eventStreamingServiceTag: ""
+  eventConsumerTag: "pr1"
 
 imagePullSecrets: []
 nameOverride: ""
@@ -38,7 +41,8 @@ securityContext: {}
 
 service:
   type: ClusterIP
-  port: 80
+  eventConsumerPort: 80
+  eventStreamingServicePort: 81
 
 aws:
   region: us-east-1
